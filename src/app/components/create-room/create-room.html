@@ -1,0 +1,79 @@
+<div class="min-h-screen bg-[#0f172a] text-white font-sans flex items-center justify-center p-6 selection:bg-yellow-400 selection:text-slate-900" data-theme="dark">
+  
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-yellow-500/10 blur-[120px]"></div>
+    <div class="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-amber-500/5 blur-[120px]"></div>
+  </div>
+
+  <div class="max-w-md w-full z-10">
+    
+    <div class="text-center mb-10 space-y-4">
+      <div class="relative inline-flex">
+        <div class="absolute inset-0 bg-yellow-500/20 blur-3xl rounded-full"></div>
+        <div class="relative bg-slate-900 border border-slate-800 p-6 rounded-[2.5rem] shadow-2xl">
+          <span class="text-5xl">🆕</span>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-4xl font-black tracking-tight mb-1 uppercase italic text-yellow-400">Create a Room</h1>
+        <p class="text-slate-500 font-bold uppercase text-[10px] tracking-[0.3em]">Yeni Bir Oylama Oturumu Başlat</p>
+      </div>
+    </div>
+
+    <div class="group relative">
+      <div class="absolute -inset-0.5 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+      
+      <div class="relative card bg-slate-900/80 backdrop-blur-2xl shadow-2xl rounded-[3rem] overflow-hidden border border-slate-800">
+        <div class="card-body p-8 md:p-12 space-y-6">
+          
+          <div class="form-control w-full">
+            <label class="label pb-2">
+              <span class="label-text font-bold text-slate-400 uppercase text-[10px] tracking-widest">Oda İsmi (Room Name)</span>
+            </label>
+            <input type="text" [(ngModel)]="newRoomName" placeholder="Örn: Mobil Sprint 45" 
+                   class="input input-bordered w-full bg-slate-950 border-slate-800 text-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400/10 transition-all font-medium h-14 rounded-2xl" />
+          </div>
+
+          <div class="form-control w-full">
+            <label class="label pb-2">
+              <span class="label-text font-bold text-slate-400 uppercase text-[10px] tracking-widest">Adınız (Your Name)</span>
+            </label>
+            <input type="text" [(ngModel)]="creatorName" placeholder="Adınızı girin" 
+                   class="input input-bordered w-full bg-slate-950 border-slate-800 text-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400/10 transition-all font-medium h-14 rounded-2xl" />
+          </div>
+
+          <div class="form-control w-full">
+            <label class="label pb-2">
+              <span class="label-text font-bold text-slate-400 uppercase text-[10px] tracking-widest">Sorumluluk (Role)</span>
+            </label>
+            <select [(ngModel)]="creatorRole" 
+                    class="select select-bordered w-full bg-slate-950 border-slate-800 text-white h-14 rounded-2xl font-semibold focus:border-yellow-400">
+              <option [ngValue]="1">👑 Scrum Master (Yönetici)</option>
+              <option [ngValue]="0">💻 Developer (Oyuncu)</option>
+              <option [ngValue]="2">👁️ İzleyici (Viewer)</option>
+            </select>
+          </div>
+
+          <div class="pt-6 space-y-4">
+            <button (click)="createAndJoinRoom()" 
+                    class="btn btn-block h-16 rounded-[1.5rem] text-lg font-black shadow-xl shadow-yellow-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border-none bg-yellow-500 hover:bg-yellow-400 text-slate-900">
+              Odayı Başlat →
+            </button>
+            
+            <button routerLink="/" 
+                    class="btn btn-ghost btn-block h-12 text-slate-500 font-bold hover:bg-white/5 transition-all">
+              ← Vazgeç ve Geri Dön
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 text-center">
+      <p class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.4em]">
+        Vakıfbank Pazarlama Yönetimi Uygulama Geliştirme Müdürlüğü &copy; 2026
+      </p>
+    </div>
+  </div>
+</div>

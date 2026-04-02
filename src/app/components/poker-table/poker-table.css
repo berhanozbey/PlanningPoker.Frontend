@@ -1,0 +1,21 @@
+/* Görev Başlığı Stili */
+.task-header-container {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 50px;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.task-badge {
+  background-color: #ffc107;
+  color: #212529;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  margin-right: 10px;
+  text-transform: uppercase;
+}

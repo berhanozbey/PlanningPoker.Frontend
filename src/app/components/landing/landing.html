@@ -1,0 +1,119 @@
+<div class="h-screen w-full bg-[#0f172a] text-white font-sans selection:bg-yellow-400 selection:text-slate-900 overflow-hidden flex flex-col relative" data-theme="dark">
+  
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-10 -left-10 w-[40%] h-[40%] rounded-full bg-yellow-500/10 blur-[120px]"></div>
+    <div class="absolute -bottom-10 -right-10 w-[40%] h-[40%] rounded-full bg-amber-500/5 blur-[120px]"></div>
+  </div>
+
+  <nav class="h-[10vh] max-w-7xl w-full mx-auto px-6 lg:px-12 flex items-center justify-between relative z-50">
+    <div class="flex items-center gap-3 cursor-pointer group" routerLink="/">
+      <div class="bg-yellow-500 text-slate-900 p-2.5 rounded-2xl shadow-lg shadow-yellow-500/20 group-hover:rotate-12 transition-transform">
+        <span class="text-2xl leading-none">🃏</span>
+      </div>
+      <span class="text-xl md:text-2xl font-black tracking-tighter uppercase italic text-white">VB PLANNING POKER</span>
+    </div>
+    
+    <div class="hidden md:flex items-center gap-8">
+      <a class="text-sm font-bold text-slate-400 hover:text-white transition-colors cursor-pointer">Features</a>
+      <a class="text-sm font-bold text-slate-400 hover:text-white transition-colors cursor-pointer">Guide</a>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24 relative z-20">
+    
+    <div class="flex-1 text-center lg:text-left space-y-6 md:space-y-10 w-full">
+      
+      <div class="space-y-4 md:space-y-6">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-[10px] md:text-xs font-bold uppercase tracking-widest">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+          </span>
+          Fibonacci
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl xl:text-8xl font-black leading-[1.05] tracking-tight">
+          Scrum Poker for <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">
+            agile teams
+          </span>
+        </h1>
+        
+        <p class="text-lg md:text-xl text-slate-400 max-w-xl font-medium leading-relaxed mx-auto lg:mx-0">
+          Estimate tasks accurately without the headache. Fast, fun, and built for modern remote teams at <span class="text-white font-bold">Vakıfbank</span>.
+        </p>
+      </div>
+
+      <div class="pt-6 md:pt-10 border-t border-slate-800/50">
+        <p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-4 md:mb-6">Trusted by elite teams at</p>
+        <div class="flex flex-wrap justify-center lg:justify-start gap-6 md:gap-10">
+          <span class="text-lg md:text-xl font-black text-white italic tracking-tighter opacity-90">VakıfBank</span>
+          <span class="text-lg md:text-xl font-bold text-slate-300 opacity-80">Microsoft</span>
+          <span class="text-lg md:text-xl font-bold text-slate-300 opacity-80">Google</span>
+          <span class="text-lg md:text-xl font-bold text-slate-300 opacity-80 italic">Deloitte.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="flex-1 relative group w-full max-w-md lg:max-w-lg xl:max-w-xl">
+      <div class="absolute -inset-6 bg-gradient-to-tr from-yellow-500/30 to-amber-500/20 rounded-full blur-[100px] opacity-60"></div>
+      
+      <div class="relative bg-slate-900 border border-slate-800 p-3 md:p-6 rounded-[2.5rem] shadow-2xl overflow-hidden backdrop-blur-3xl transform transition-transform duration-700 hover:scale-[1.02] aspect-[4/5] md:aspect-square flex flex-col">
+        
+        <div class="bg-slate-950/80 rounded-[2rem] border border-slate-800/50 flex-1 p-4 md:p-6 relative overflow-hidden flex flex-col justify-between">
+          
+          <div class="opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-10 absolute inset-0 flex flex-col justify-between p-4 md:p-6">
+            <div class="flex justify-between items-center px-2">
+               <div class="flex flex-col items-center gap-1">
+                  <div class="w-10 h-10 rounded-full bg-yellow-500 text-slate-900 flex items-center justify-center font-bold">B</div>
+                  <span class="text-[8px] font-bold text-slate-500">Berhan</span>
+               </div>
+               <div class="flex flex-col items-center gap-1">
+                  <div class="w-10 h-10 rounded-full bg-amber-500 text-slate-900 flex items-center justify-center font-bold">✓</div>
+                  <span class="text-[8px] font-bold text-slate-500">System</span>
+               </div>
+               <div class="flex flex-col items-center gap-1">
+                  <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold border border-slate-700">?</div>
+                  <span class="text-[8px] font-bold text-slate-500">User X</span>
+               </div>
+            </div>
+
+            <div class="flex justify-center relative my-auto">
+              <div class="w-20 h-28 bg-yellow-500 text-slate-900 rounded-xl flex items-center justify-center text-3xl font-black border border-yellow-400/50 transform -rotate-12 absolute -translate-x-5">?</div>
+              <div class="w-20 h-28 bg-white text-slate-900 rounded-xl flex items-center justify-center text-3xl font-black z-10">8</div>
+              <div class="w-20 h-28 bg-amber-500 text-slate-900 rounded-xl flex items-center justify-center text-3xl font-black border border-amber-400/50 transform rotate-12 absolute translate-x-5">8</div>
+            </div>
+
+            <div class="border-t border-slate-800/50 pt-2 flex justify-center gap-1.5 opacity-50">
+               <div class="w-6 h-10 border border-slate-700 rounded flex items-center justify-center text-[10px]">1</div>
+               <div class="w-6 h-10 border border-slate-700 rounded flex items-center justify-center text-[10px]">2</div>
+               <div class="w-6 h-10 bg-yellow-500 text-slate-900 rounded flex items-center justify-center text-[10px] font-bold">3</div>
+               <div class="w-6 h-10 border border-slate-700 rounded flex items-center justify-center text-[10px]">5</div>
+               <div class="w-6 h-10 border border-slate-700 rounded flex items-center justify-center text-[10px]">8</div>
+            </div>
+          </div>
+
+          <div class="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 md:gap-5 p-6 bg-slate-900/40 backdrop-blur-md rounded-[2rem]">
+            
+            <button routerLink="/create" class="w-full max-w-[280px] md:max-w-sm h-16 md:h-20 rounded-3xl bg-yellow-500 hover:bg-yellow-400 text-slate-900 text-lg md:text-xl font-black tracking-wide shadow-[0_0_30px_rgba(234,179,8,0.4)] border border-yellow-400/50 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3">
+              START NEW GAME <span class="text-xl md:text-2xl">🚀</span>
+            </button>
+
+            <button routerLink="/join" class="w-full max-w-[280px] md:max-w-sm h-16 md:h-20 rounded-3xl bg-slate-800/80 hover:bg-slate-700 text-white text-lg md:text-xl font-black tracking-wide shadow-xl border border-slate-600 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 backdrop-blur-xl">
+              JOIN A GAME <span class="text-xl md:text-2xl">🤝</span>
+            </button>
+            
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="h-[10vh] w-full flex items-center justify-center border-t border-slate-800/50 relative z-20">
+    <p class="text-slate-500 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em]">
+     Vakıfbank Pazarlama Yönetimi Uygulama Geliştirme Müdürlüğü &copy; 2026 Crafted with Passion by <span class="text-slate-300">Berhan Özbey</span>
+    </p>
+  </footer>
+</div>
