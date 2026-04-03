@@ -127,16 +127,10 @@ export class PokerTable implements OnInit, OnDestroy {
 
         const me = this.users.find((u: any) => u.id === this.myUserId);
         
-        // ✨ KRİTİK KONTROL: Eğer sayfayı yenilediysek ve Backend bizi sildiyse!
-        if (!me) {
-           console.warn("Bağlantı koptuğu için sunucudan silindin. Yeniden giriş yapılıyor...");
-           sessionStorage.clear();
-           this.router.navigate(['/join', this.roomId]);
-           return;
-        }
+        // ❌ Panik Kodu (Dışarı atma) silindi. F5'e basınca artık sabırla bekleyecek!
 
         // ✨ KALEM İKONU GARANTİSİ: Eğer lokalde oy değiştirdiysek, sunucudan ne gelirse gelsin kalemi yak!
-        if (this.hasEditedLocal) {
+        if (this.hasEditedLocal && me) {
             me.isEdited = true;
         }
 
@@ -287,5 +281,7 @@ export class PokerTable implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopCountdown();
     this.subs.unsubscribe();
+    // ✨ BINGO: Sayfadan çıkıldığı an (Leave veya Geri Tuşu) SignalR kablosunu kopar! 
+    this.pokerService.stopConnection(); 
   }
 }

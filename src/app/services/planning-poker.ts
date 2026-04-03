@@ -82,6 +82,13 @@ export class PlanningPokerService {
     this.hubConnection.onreconnected(id => console.log('✅ Yeniden bağlandı. Connection ID:', id));
   }
 
+  // ✨ YENİ: Masadan kalktığımızda bağlantıyı koparacak "Fiş Çekme" metodu (Hayalet Avcısı)
+  public stopConnection() {
+    if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
+      this.hubConnection.stop().catch(err => console.error('Bağlantı durdurulamadı:', err));
+    }
+  }
+
   private setupSignalRListeners() {
     this.hubConnection.off('UserUpdated');
     this.hubConnection.off('VotesRevealed');
