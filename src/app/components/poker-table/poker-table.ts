@@ -61,7 +61,17 @@ export class PokerTable implements OnInit, OnDestroy {
     this.pokerService.startConnection();
 
     setTimeout(() => {
-      this.pokerService.joinRoomSignalR(this.roomId, this.myUserId);
+      // ✨ YENİ: F5 (Yenileme) atıldıysa eski oyu hafızadan kurtar
+      this.myCurrentVote = sessionStorage.getItem('myCurrentVote'); 
+
+      // ✨ YENİ: Sadece ID değil; isim, rol ve eski oyu da göndererek yeniden doğ!
+      this.pokerService.joinRoomSignalR(
+        this.roomId, 
+        this.myUserId, 
+        this.myUserName, 
+        this.myRole, 
+        this.myCurrentVote || ""
+      );
     }, 1000);
 
     this.subs.add(this.pokerService.userUpdated$.subscribe(() => {
@@ -100,9 +110,11 @@ export class PokerTable implements OnInit, OnDestroy {
     this.showEditPopover = false;
     this.hasEditedLocal = false;
     this.isVoting = false;
+    // ✨ YENİ: Tur sıfırlandığında hafızadaki oyu da sil
+    sessionStorage.removeItem('myCurrentVote');
   }
 
-loadRoomData() {
+  loadRoomData() {
     this.pokerService.getRoom(this.roomId).subscribe({
       next: (room: any) => {
         this.roomName = room.name;
@@ -221,7 +233,6 @@ loadRoomData() {
   }
 
   selectCard(card: string) {
-    // İzleyici (2) değilse oy verebilir
     if (this.myRole === 2 || this.countdown > 0 || this.isVoting) return;
 
     this.isVoting = true;
@@ -237,6 +248,8 @@ loadRoomData() {
     }
     
     this.myCurrentVote = card;
+    // ✨ YENİ: Verilen oyu F5 için hafızaya kazı
+    sessionStorage.setItem('myCurrentVote', card);
 
     if (this.isVotingRevealed) {
       this.calculateAverage();
@@ -252,20 +265,17 @@ loadRoomData() {
   }
 
   revealVotes() { 
-      // ✨ GÜNCELLEME: İzleyici (2) hariç herkes oyları açabilir
       if (this.myRole !== 2 && !this.isVotingRevealed && this.countdown === 0) {
           this.pokerService.revealVotes(this.roomId); 
       }
   }
 
   clearVotes() { 
-      // ✨ GÜNCELLEME: İzleyici (2) hariç herkes masayı sıfırlayabilir
       if (this.myRole !== 2) {
           this.pokerService.clearVotes(this.roomId); 
       }
   }
 
-  // ✨ GÜNCELLEME: Bot yönetimi de izleyici hariç herkese açıldı
   addBot() { 
     if(this.myRole !== 2) this.pokerService.addBot(this.roomId); 
   }

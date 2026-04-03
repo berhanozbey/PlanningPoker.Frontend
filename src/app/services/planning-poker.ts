@@ -94,8 +94,9 @@ export class PlanningPokerService {
     this.hubConnection.on('TaskChanged', (newTaskName: string) => this.taskChanged$.next(newTaskName));
   }
 
-  public joinRoomSignalR(roomId: string, userId: string) {
-    this.safeInvoke('JoinRoom', roomId, userId);
+  // ✨ GÜNCELLEME: Kusursuz yeniden bağlanma için ekstra parametreler eklendi
+  public joinRoomSignalR(roomId: string, userId: string, userName: string, role: number, currentVote: string) {
+    this.safeInvoke('JoinRoom', roomId, userId, userName, role, currentVote || "");
   }
 
   public submitVote(roomId: string, userId: string, vote: string) {
