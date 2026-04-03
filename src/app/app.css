@@ -1,0 +1,65 @@
+/* =========================================
+   📱 MOBİL UYUMLULUK (HIZLI ÇÖZÜM)
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* Sayfa taşmalarını önle */
+  .container {
+    padding: 10px;
+    overflow-x: hidden;
+  }
+
+  /* Poker masasını küçült */
+  .poker-table {
+    width: 100% !important;
+    min-height: 200px !important;
+    border-radius: 100px !important;
+    margin: 20px 0 !important;
+    padding: 20px 10px !important;
+  }
+
+  /* Oyuncuları alt alta/yan yana sığdır */
+  .players-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 15px !important;
+  }
+
+  /* Kartları taşmayacak şekilde diz */
+  .cards-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 10px !important;
+  }
+
+  /* Kart boyutlarını küçült */
+  .poker-card {
+    width: 50px !important;
+    height: 70px !important;
+    font-size: 1.2rem !important;
+  }
+
+  /* Butonları parmakla basılsın diye büyüt ve alt alta diz */
+  .action-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .action-buttons button {
+    width: 100% !important;
+    padding: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .poker-card {
+    width: 45px !important;
+    height: 65px !important;
+    font-size: 1rem !important;
+  }
+}
