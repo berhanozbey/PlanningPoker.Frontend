@@ -47,12 +47,10 @@ export class PokerTable implements OnInit, OnDestroy {
   ngOnInit() {
     this.roomId = this.route.snapshot.paramMap.get('id') || '';
     
-    // Kullanıcı bilgilerini çekiyoruz
     this.myUserId = sessionStorage.getItem('userId') || '';
     this.myUserName = sessionStorage.getItem('userName') || '';
     this.myRole = Number(sessionStorage.getItem('userRole') || '0');
 
-    // GÜMRÜK KONTROLÜ: Eğer isim veya ID yoksa, kullanıcıyı Join sayfasına yönlendir
     if (!this.myUserId || !this.myUserName) {
       console.warn("Kullanıcı bilgisi eksik, kayıt sayfasına yönlendiriliyor...");
       this.router.navigate(['/join', this.roomId]);
@@ -104,7 +102,6 @@ export class PokerTable implements OnInit, OnDestroy {
     this.isVoting = false;
   }
 
-  // ✨ GÜNCEL loadRoomData: Hata yönetimli ve kendi kendini temizleyen versiyon
   loadRoomData() {
     this.pokerService.getRoom(this.roomId).subscribe({
       next: (room: any) => {
@@ -129,8 +126,6 @@ export class PokerTable implements OnInit, OnDestroy {
       },
       error: (err: any) => {
           console.error("Oda yüklenemedi, veriler temizleniyor:", err);
-          // EĞER ODA BULUNAMAZSA (Backend sıfırlanmış veya link bozuk):
-          // Eski kimlik bilgilerini temizle ve ana sayfaya yönlendir
           if (err.status === 404 || err.status === 500) {
             sessionStorage.clear();
             this.router.navigate(['/']);
@@ -213,6 +208,7 @@ export class PokerTable implements OnInit, OnDestroy {
   }
 
   selectCard(card: string) {
+    // İzleyici (2) değilse oy verebilir
     if (this.myRole === 2 || this.countdown > 0 || this.isVoting) return;
 
     this.isVoting = true;
@@ -243,19 +239,27 @@ export class PokerTable implements OnInit, OnDestroy {
   }
 
   revealVotes() { 
-      if (this.myRole === 1 && !this.isVotingRevealed && this.countdown === 0) {
+      // ✨ GÜNCELLEME: İzleyici (2) hariç herkes oyları açabilir
+      if (this.myRole !== 2 && !this.isVotingRevealed && this.countdown === 0) {
           this.pokerService.revealVotes(this.roomId); 
       }
   }
 
   clearVotes() { 
-      if (this.myRole === 1) {
+      // ✨ GÜNCELLEME: İzleyici (2) hariç herkes masayı sıfırlayabilir
+      if (this.myRole !== 2) {
           this.pokerService.clearVotes(this.roomId); 
       }
   }
 
-  addBot() { this.pokerService.addBot(this.roomId); }
-  removeBots() { this.pokerService.removeBots(this.roomId); }
+  // ✨ GÜNCELLEME: Bot yönetimi de izleyici hariç herkese açıldı
+  addBot() { 
+    if(this.myRole !== 2) this.pokerService.addBot(this.roomId); 
+  }
+  
+  removeBots() { 
+    if(this.myRole !== 2) this.pokerService.removeBots(this.roomId); 
+  }
 
   ngOnDestroy() {
     this.stopCountdown();

@@ -118,11 +118,13 @@
            <div *ngIf="isOutlier(user.currentVote)" class="absolute -bottom-1 inset-x-2 h-1 bg-red-500 rounded-full blur-[1px]"></div>
         </div>
 
-        <div class="text-center w-20">
-          <p class="text-[11px] md:text-xs font-bold tracking-tight truncate mt-1" [class.text-white]="user.id === myUserId" [class.text-slate-400]="user.id !== myUserId">
+        <div class="text-center w-20 flex flex-col items-center">
+          <p class="text-[11px] md:text-xs font-bold tracking-tight truncate mt-1 w-full" [class.text-white]="user.id === myUserId" [class.text-slate-400]="user.id !== myUserId">
             {{ user.name }}
           </p>
-          <span *ngIf="user.role === 1" class="text-[8px] text-amber-500 uppercase font-black">Admin</span>
+          <span *ngIf="user.role === 1" class="text-[8px] text-amber-500 uppercase font-black mt-0.5">Scrum Master</span>
+          <span *ngIf="user.role === 0" class="text-[8px] text-blue-400 uppercase font-black mt-0.5">Developer</span>
+          <span *ngIf="user.role === 2" class="text-[8px] text-slate-500 uppercase font-black mt-0.5">İzleyici</span>
         </div>
 
       </div>
@@ -132,7 +134,7 @@
 
   <footer class="pb-10 pt-6 bg-[#111827] flex flex-col items-center justify-center gap-4 relative z-50 min-h-[15vh]">
     
-    <div *ngIf="myRole === 1" class="mb-2">
+    <div *ngIf="myRole !== 2" class="mb-2">
       <button *ngIf="!isVotingRevealed" 
               (click)="revealVotes()" 
               [disabled]="countdown > 0" 
@@ -164,7 +166,7 @@
       <p class="text-sm font-medium text-slate-400 italic">Oyunuzu değiştirmek için masadaki kartınıza tıklayın.</p>
     </div>
 
-    <div *ngIf="myRole === 1" class="absolute left-6 bottom-6 dropdown dropdown-top dropdown-right">
+    <div *ngIf="myRole !== 2" class="absolute left-6 bottom-6 dropdown dropdown-top dropdown-right">
       <button tabindex="0" class="w-12 h-12 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xl hover:bg-slate-700 transition-colors shadow-lg">🤖</button>
       <ul tabindex="0" class="dropdown-content menu p-2 shadow-2xl bg-slate-800 border border-slate-700 rounded-xl w-48 mb-2 ml-2">
         <li><button (click)="addBot()" class="text-yellow-400 font-bold py-2 text-xs hover:bg-slate-700">🤖 Add Bot</button></li>
