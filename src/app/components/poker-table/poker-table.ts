@@ -102,7 +102,7 @@ export class PokerTable implements OnInit, OnDestroy {
     this.isVoting = false;
   }
 
-  loadRoomData() {
+loadRoomData() {
     this.pokerService.getRoom(this.roomId).subscribe({
       next: (room: any) => {
         this.roomName = room.name;
@@ -115,6 +115,19 @@ export class PokerTable implements OnInit, OnDestroy {
 
         const me = this.users.find((u: any) => u.id === this.myUserId);
         
+        // ✨ KRİTİK KONTROL: Eğer sayfayı yenilediysek ve Backend bizi sildiyse!
+        if (!me) {
+           console.warn("Bağlantı koptuğu için sunucudan silindin. Yeniden giriş yapılıyor...");
+           sessionStorage.clear();
+           this.router.navigate(['/join', this.roomId]);
+           return;
+        }
+
+        // ✨ KALEM İKONU GARANTİSİ: Eğer lokalde oy değiştirdiysek, sunucudan ne gelirse gelsin kalemi yak!
+        if (this.hasEditedLocal) {
+            me.isEdited = true;
+        }
+
         if (me && this.myCurrentVote === null && me.currentVote !== null) {
             this.myCurrentVote = me.currentVote;
         }
