@@ -47,17 +47,16 @@ export class PokerTable implements OnInit, OnDestroy {
   ngOnInit() {
     this.roomId = this.route.snapshot.paramMap.get('id') || '';
     
-    // ✨ GÜNCELLEME: Kullanıcı bilgilerini çekiyoruz
+    // Kullanıcı bilgilerini çekiyoruz
     this.myUserId = sessionStorage.getItem('userId') || '';
     this.myUserName = sessionStorage.getItem('userName') || '';
     this.myRole = Number(sessionStorage.getItem('userRole') || '0');
 
-    // ✨ GÜMRÜK KONTROLÜ: Eğer isim veya ID yoksa, kullanıcıyı Join sayfasına yönlendir
+    // GÜMRÜK KONTROLÜ: Eğer isim veya ID yoksa, kullanıcıyı Join sayfasına yönlendir
     if (!this.myUserId || !this.myUserName) {
       console.warn("Kullanıcı bilgisi eksik, kayıt sayfasına yönlendiriliyor...");
-      // Oda ID'sini de gönderiyoruz ki Join sayfası otomatik doldurabilsin
       this.router.navigate(['/join', this.roomId]);
-      return; // Aşağıdaki SignalR bağlantılarının çalışmaması için burada kesiyoruz
+      return; 
     }
 
     this.loadRoomData();
@@ -105,6 +104,7 @@ export class PokerTable implements OnInit, OnDestroy {
     this.isVoting = false;
   }
 
+  // ✨ GÜNCEL loadRoomData: Hata yönetimli ve kendi kendini temizleyen versiyon
   loadRoomData() {
     this.pokerService.getRoom(this.roomId).subscribe({
       next: (room: any) => {
@@ -128,7 +128,13 @@ export class PokerTable implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (err: any) => {
-          console.error("Failed to load room data:", err);
+          console.error("Oda yüklenemedi, veriler temizleniyor:", err);
+          // EĞER ODA BULUNAMAZSA (Backend sıfırlanmış veya link bozuk):
+          // Eski kimlik bilgilerini temizle ve ana sayfaya yönlendir
+          if (err.status === 404 || err.status === 500) {
+            sessionStorage.clear();
+            this.router.navigate(['/']);
+          }
       }
     });
   }
