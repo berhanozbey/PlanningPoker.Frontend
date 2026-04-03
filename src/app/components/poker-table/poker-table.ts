@@ -30,7 +30,7 @@ export class PokerTable implements OnInit, OnDestroy {
   // UI Durumları
   showEditPopover: boolean = false;
   hasEditedLocal: boolean = false;
-  isVoting: boolean = false; // ✨ YENİ: Çift tıklamayı (Race Condition) önlemek için kilit (Lock)
+  isVoting: boolean = false; 
 
   private timerInterval: any;
   availableCards: string[] = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?', '☕'];
@@ -46,9 +46,19 @@ export class PokerTable implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.roomId = this.route.snapshot.paramMap.get('id') || '';
+    
+    // ✨ GÜNCELLEME: Kullanıcı bilgilerini çekiyoruz
     this.myUserId = sessionStorage.getItem('userId') || '';
     this.myUserName = sessionStorage.getItem('userName') || '';
     this.myRole = Number(sessionStorage.getItem('userRole') || '0');
+
+    // ✨ GÜMRÜK KONTROLÜ: Eğer isim veya ID yoksa, kullanıcıyı Join sayfasına yönlendir
+    if (!this.myUserId || !this.myUserName) {
+      console.warn("Kullanıcı bilgisi eksik, kayıt sayfasına yönlendiriliyor...");
+      // Oda ID'sini de gönderiyoruz ki Join sayfası otomatik doldurabilsin
+      this.router.navigate(['/join', this.roomId]);
+      return; // Aşağıdaki SignalR bağlantılarının çalışmaması için burada kesiyoruz
+    }
 
     this.loadRoomData();
     this.pokerService.startConnection();
@@ -57,14 +67,12 @@ export class PokerTable implements OnInit, OnDestroy {
       this.pokerService.joinRoomSignalR(this.roomId, this.myUserId);
     }, 1000);
 
-    // ✨ GÜNCELLEME: Tüm SignalR aboneliklerini daha güvenli hale getirdik
     this.subs.add(this.pokerService.userUpdated$.subscribe(() => {
       this.zone.run(() => { this.loadRoomData(); });
     }));
 
     this.subs.add(this.pokerService.votesRevealed$.subscribe(() => {
       this.zone.run(() => {
-        // Eğer zaten geri sayım başlamadıysa ve oylar henüz açılmadıysa başlat
         if (this.countdown === 0 && !this.isVotingRevealed) {
           this.startCountdown();
         }
@@ -73,7 +81,7 @@ export class PokerTable implements OnInit, OnDestroy {
 
     this.subs.add(this.pokerService.votesCleared$.subscribe(() => {
       this.zone.run(() => {
-        this.clearLocalState(); // ✨ YENİ: Temizleme işlemini merkezi bir fonksiyona aldık
+        this.clearLocalState();
         this.loadRoomData();
       });
     }));
@@ -86,9 +94,8 @@ export class PokerTable implements OnInit, OnDestroy {
     }));
   }
 
-  // ✨ YENİ: Tur sıfırlandığında her şeyi kesin olarak temizleyen fonksiyon
   clearLocalState() {
-    this.stopCountdown(); // Sayacı kesin durdur
+    this.stopCountdown();
     this.isVotingRevealed = false;
     this.countdown = 0;
     this.average = 0;
@@ -111,7 +118,6 @@ export class PokerTable implements OnInit, OnDestroy {
 
         const me = this.users.find((u: any) => u.id === this.myUserId);
         
-        // Eğer sunucuda oyumuz var ama lokalde yoksa eşitle
         if (me && this.myCurrentVote === null && me.currentVote !== null) {
             this.myCurrentVote = me.currentVote;
         }
@@ -127,9 +133,8 @@ export class PokerTable implements OnInit, OnDestroy {
     });
   }
 
-  // ✨ GÜNCELLEME: Sayaç mantığı sağlamlaştırıldı
   startCountdown() {
-    this.stopCountdown(); // Önceki sayacı kesinlikle durdurduğumuzdan emin olalım
+    this.stopCountdown();
     this.showEditPopover = false;
     this.countdown = 3;
     this.cdr.detectChanges();
@@ -139,7 +144,7 @@ export class PokerTable implements OnInit, OnDestroy {
         this.countdown--;
 
         if (this.countdown <= 0) {
-          this.stopCountdown(); // Sayacı durdur
+          this.stopCountdown();
           this.countdown = 0;
           this.isVotingRevealed = true;
           this.calculateAverage();
@@ -149,7 +154,6 @@ export class PokerTable implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  // ✨ YENİ: Sayacı güvenli bir şekilde durduran yardımcı fonksiyon
   stopCountdown() {
       if (this.timerInterval) {
           clearInterval(this.timerInterval);
@@ -177,19 +181,16 @@ export class PokerTable implements OnInit, OnDestroy {
     return Math.abs(v - this.average) > 2;
   }
 
-copyRoomId() {
-  // window.location.href -> Tarayıcı çubuğundaki tam linki alır (domain + path + ID)
-  const fullUrl = window.location.href; 
+  copyRoomId() {
+    const fullUrl = window.location.href; 
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      this.copySuccess = true;
+      setTimeout(() => this.copySuccess = false, 2000);
+    }).catch(err => {
+      console.error('Link kopyalanamadı:', err);
+    });
+  }
 
-  navigator.clipboard.writeText(fullUrl).then(() => {
-    this.copySuccess = true;
-    
-    // 2 saniye sonra "Copied!" yazısını eski haline döndürür
-    setTimeout(() => this.copySuccess = false, 2000);
-  }).catch(err => {
-    console.error('Link kopyalanamadı:', err);
-  });
-}
   leaveRoom() {
     if (confirm('Odadan ayrılmak istediğinize emin misiniz?')) {
       this.pokerService.leaveRoom(this.roomId, this.myUserId).subscribe({
@@ -199,25 +200,23 @@ copyRoomId() {
   }
 
   toggleEditPopover() {
-    if (this.countdown === 0 && !this.isVoting) { // isVoting kontrolü eklendi
+    if (this.countdown === 0 && !this.isVoting) {
       this.showEditPopover = !this.showEditPopover;
       this.cdr.detectChanges();
     }
   }
 
-  // ✨ GÜNCELLEME: Çift Tıklama (Race Condition) Kesin Çözümü
   selectCard(card: string) {
-    // Kurallar: İzleyiciysen, geri sayım varsa veya ŞU AN İŞLEM YAPIYORSA (isVoting) engelle
     if (this.myRole === 2 || this.countdown > 0 || this.isVoting) return;
 
-    this.isVoting = true; // ✨ YENİ: İşlemi kilitle
+    this.isVoting = true;
     this.showEditPopover = false;
 
     const me = this.users.find(u => u.id === this.myUserId);
     if (me) {
       if (this.myCurrentVote !== null && this.myCurrentVote !== card) {
         me.isEdited = true;
-        this.hasEditedLocal = true; // Lokal düzenleme bayrağını ayarla
+        this.hasEditedLocal = true;
       }
       me.currentVote = card;
     }
@@ -228,12 +227,9 @@ copyRoomId() {
       this.calculateAverage();
     }
 
-    this.cdr.detectChanges(); // UI'ı anında güncelle
-
-    // Sunucuya isteği gönder
+    this.cdr.detectChanges();
     this.pokerService.submitVote(this.roomId, this.myUserId, card);
     
-    // İşlem bittikten kısa bir süre sonra kilidi kaldır (Çift tıklamayı engeller)
     setTimeout(() => {
         this.isVoting = false;
         this.cdr.detectChanges();
@@ -256,7 +252,7 @@ copyRoomId() {
   removeBots() { this.pokerService.removeBots(this.roomId); }
 
   ngOnDestroy() {
-    this.stopCountdown(); // ✨ GÜNCELLEME: Bileşen yok edilirken sayacı kesin temizle
+    this.stopCountdown();
     this.subs.unsubscribe();
   }
 }

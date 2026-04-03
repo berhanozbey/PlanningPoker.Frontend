@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; // OnInit eklendi
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router'; // ActivatedRoute eklendi
 import { PlanningPokerService } from '../../services/planning-poker';
 
 @Component({
@@ -11,15 +11,25 @@ import { PlanningPokerService } from '../../services/planning-poker';
   templateUrl: './join-room.html',
   styleUrl: './join-room.css'
 })
-export class JoinRoom {
+export class JoinRoom implements OnInit { // OnInit eklendi
   existingRoomId: string = '';
   joinerName: string = '';
   joinerRole: number = 0; // Varsayılan: Developer (0)
 
   constructor(
     private pokerService: PlanningPokerService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute // Buraya eklendi
   ) {}
+
+  ngOnInit() {
+    // ✨ YENİ: URL'de bir ID parametresi varsa (Örn: /join/ODA-ID) onu yakalar
+    const idFromUrl = this.route.snapshot.paramMap.get('id');
+    if (idFromUrl) {
+      this.existingRoomId = idFromUrl;
+      console.log("URL'den Oda ID'si yakalandı:", this.existingRoomId);
+    }
+  }
 
   // "Join Game" butonuna basıldığında çalışır
   joinRoomBtn() {
@@ -28,13 +38,13 @@ export class JoinRoom {
       return;
     }
 
-    // ✨ URL TEMİZLEME MANTIĞI ✨
+    // ✨ URL TEMİZLEME MANTIĞI ✨ (Mevcut mantığın aynen korunuyor)
     let idToUse = this.existingRoomId.trim();
 
     // Kullanıcı tam link yapıştırdıysa, sadece sonundaki ID'yi çekiyoruz
     if (idToUse.includes('/room/')) {
       idToUse = idToUse.split('/room/')[1];
-    } else if (idToUse.includes('/poker-table/')) { // Eğer eski rota isminiyse diye önlem
+    } else if (idToUse.includes('/poker-table/')) {
       idToUse = idToUse.split('/poker-table/')[1];
     }
 
